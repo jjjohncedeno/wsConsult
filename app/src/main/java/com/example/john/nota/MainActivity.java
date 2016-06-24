@@ -130,15 +130,17 @@ public class MainActivity extends Activity {
                 int num = response.getPropertyCount();
                 ArrayList<Datos> datos = new ArrayList<Datos>();
 
-                for (int i=0; i<num; i++){
-                    String nombre, apellido, cedula, matricula;
-                    SoapObject ic = (SoapObject)response.getProperty(i);
+                for (int i=0; i<num; i++) {
+                    try {
+                        String nombre, apellido, cedula, matricula;
+                        SoapObject ic = (SoapObject) response.getProperty(i);
 
-                    matricula=ic.getProperty("CODESTUDIANTE").toString();
-                    cedula=ic.getProperty("NUMEROIDENTIFICACION").toString();
-                    nombre=ic.getProperty("NOMBRES").toString();
-                    apellido=ic.getProperty("APELLIDOS").toString();
-                    datos.add(new Datos(nombre, apellido, matricula, cedula));
+                        matricula = ic.getProperty("CODESTUDIANTE").toString();
+                        cedula = ic.getProperty("NUMEROIDENTIFICACION").toString();
+                        nombre = ic.getProperty("NOMBRES").toString();
+                        apellido = ic.getProperty("APELLIDOS").toString();
+                        datos.add(new Datos(nombre, apellido, matricula, cedula));
+                    }catch (Exception e){}
                 }
 
                 return datos;
