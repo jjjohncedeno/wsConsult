@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -105,30 +106,37 @@ public class MainActivity extends Activity {
             datos = datoses;
             dialog.dismiss();
 
-            MostrarDialogo(datoses);
+            //MostrarDialogo(datoses);
 
         }
 
         protected ArrayList<Datos> doInBackground(String... params) {
             String NAMESPACE = "http://tempuri.org/";
-            String URL="https://ws.espol.edu.ec/saac/wsandroid.asmx";
-            String METHOD_NAME = "wsConsultarPersonaPorNombres";
-            String SOAP_ACTION = "http://tempuri.org/wsConsultarPersonaPorNombres";
+            String URL="https://ws.espol.edu.ec/saac/directorioespol.asmx";
+            String METHOD_NAME = "autenticacion";
+            String SOAP_ACTION = "http://academico.espol.edu.ec/webservices/autenticacion";
             HttpTransportSE httpTransport = new HttpTransportSE(URL);
             SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
-            request.addProperty("nombre",params[0]);
-            request.addProperty("apellido", params[1]);
+            request.addProperty("varUser",params[0]);
+            request.addProperty("varContrasenia", params[1]);
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapSerializationEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
             SoapObject response;
+            System.out.print(params[0]);
+            System.out.print(params[1]);
             try{
                 httpTransport.call(SOAP_ACTION,envelope);
-                response = (SoapObject) envelope.getResponse();
-                response = (SoapObject) response.getProperty("diffgram");
-                response = (SoapObject) response.getProperty("NewDataSet");
+                response = (SoapObject) envelope.bodyIn;
+                System.out.print(response);
+                Log.d("print", response.toString());
+                response = (SoapObject) response.getProperty(0);
+                response = (SoapObject) response.getProperty(0);
                 int num = response.getPropertyCount();
-                ArrayList<Datos> datos = new ArrayList<Datos>();
+                System.out.print(num);
+                Toast.makeText(MainActivity.this , params[1].toString() + " " +  params[1].toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, num, Toast.LENGTH_LONG).show();
+                /*ArrayList<Datos> datos = new ArrayList<Datos>();
 
                 for (int i=0; i<num; i++) {
                     try {
@@ -141,7 +149,7 @@ public class MainActivity extends Activity {
                         apellido = ic.getProperty("APELLIDOS").toString();
                         datos.add(new Datos(nombre, apellido, matricula, cedula));
                     }catch (Exception e){}
-                }
+                }*/
 
                 return datos;
             }
